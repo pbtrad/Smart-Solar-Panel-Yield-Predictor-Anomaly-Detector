@@ -176,7 +176,8 @@ class SolarPowerForecaster:
             metrics = {"mse": mse, "rmse": rmse, "mae": mae, "mape": mape}
 
             logger.info(
-                f"Model evaluation - RMSE: {rmse:.2f}, MAE: {mae:.2f}, MAPE: {mape:.2f}%"
+                f"Model evaluation - RMSE: {rmse:.2f}, "
+                f"MAE: {mae:.2f}, MAPE: {mape:.2f}%"
             )
             return metrics
 

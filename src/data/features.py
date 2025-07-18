@@ -1,7 +1,7 @@
 import pandas as pd
 import numpy as np
-from datetime import datetime, timedelta
-from typing import Dict, Optional, Tuple
+from datetime import timedelta
+from typing import Dict, Optional
 import logging
 
 logger = logging.getLogger(__name__)
@@ -253,6 +253,43 @@ class ProphetFeatureEngineer:
         except Exception as e:
             raise FeatureEngineeringError(
                 f"Failed to process data for Prophet: {str(e)}"
+            )
+
+    def process_for_anomaly_detection(
+        self,
+        inverter_df: pd.DataFrame,
+        weather_df: pd.DataFrame,
+        maintenance_df: Optional[pd.DataFrame] = None,
+    ) -> pd.DataFrame:
+        try:
+            inverter_df = self.clean_inverter_data(inverter_df)
+            weather_df = self.clean_weather_data(weather_df)
+
+            if inverter_df.empty or weather_df.empty:
+                logger.warning("No valid data after cleaning")
+                return pd.DataFrame()
+
+            merged_df = self.merge_weather_inverter(inverter_df, weather_df)
+
+            if merged_df.empty:
+                logger.warning("No data after merging")
+                return pd.DataFrame()
+
+            merged_df = self.create_efficiency_features(merged_df)
+            merged_df = self.create_forecast_features(merged_df)
+
+            if maintenance_df is not None and not maintenance_df.empty:
+                merged_df = self.add_maintenance_features(merged_df, maintenance_df)
+
+            # Keep timestamp column for anomaly detection
+            merged_df = self.handle_missing_values(merged_df)
+
+            logger.info(f"Prepared {len(merged_df)} records for anomaly detection")
+            return merged_df
+
+        except Exception as e:
+            raise FeatureEngineeringError(
+                f"Failed to process data for anomaly detection: {str(e)}"
             )
 
 

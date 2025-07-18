@@ -1,13 +1,11 @@
 import unittest
-from unittest.mock import Mock, patch, MagicMock
+from unittest.mock import Mock, patch
 import pandas as pd
-from datetime import datetime, timedelta, timezone
-import requests
+from datetime import datetime
 from io import StringIO
 
 from src.data.ingestion import (
     DataIngestionError,
-    BaseIngestionService,
     InverterIngestionService,
     WeatherIngestionService,
     MaintenanceIngestionService,

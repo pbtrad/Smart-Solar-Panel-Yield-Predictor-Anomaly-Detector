@@ -1,9 +1,7 @@
 import unittest
 from unittest.mock import Mock, patch, mock_open
 import os
-import tempfile
 import yaml
-from pathlib import Path
 
 from src.utils.config import ConfigManager
 

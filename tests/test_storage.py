@@ -1,9 +1,7 @@
 import unittest
-from unittest.mock import Mock, patch, MagicMock
+from unittest.mock import Mock, patch
 import pandas as pd
-from datetime import datetime, timedelta
-import json
-from io import StringIO
+from datetime import datetime
 
 from src.data.storage import (
     StorageError,
@@ -184,6 +182,10 @@ class TestObjectStorage(unittest.TestCase):
             bucket_name="test_bucket",
         )
 
+        # Verify the storage object was created correctly
+        self.assertEqual(storage.bucket_name, "test_bucket")
+        self.assertEqual(storage.s3_client, mock_s3_client)
+
         mock_boto_client.assert_called_once_with(
             "s3",
             endpoint_url="http://test:9000",
@@ -293,6 +295,11 @@ class TestDataStorageManager(unittest.TestCase):
 
         manager = DataStorageManager(self.ts_config, self.object_config)
 
+        # Verify the manager was created correctly
+        self.assertIsNotNone(manager)
+        self.assertEqual(manager.ts_storage, mock_ts_instance)
+        self.assertEqual(manager.object_storage, mock_object_instance)
+
         mock_ts_storage.assert_called_once_with(**self.ts_config)
         mock_object_storage.assert_called_once_with(**self.object_config)
 
@@ -365,6 +372,11 @@ class TestDataStorageManager(unittest.TestCase):
         mock_object_storage.return_value = mock_object_instance
 
         manager = DataStorageManager(self.ts_config, self.object_config)
+
+        # Verify the manager was created correctly
+        self.assertIsNotNone(manager)
+        self.assertEqual(manager.ts_storage, mock_ts_instance)
+        self.assertEqual(manager.object_storage, mock_object_instance)
 
         start_time = datetime(2024, 1, 1, 10, 0, 0)
         end_time = datetime(2024, 1, 1, 11, 0, 0)

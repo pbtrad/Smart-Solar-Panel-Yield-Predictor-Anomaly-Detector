@@ -203,3 +203,9 @@ tensorboard_logs/
 # Temporary files
 *.tmp
 *.temp 
+
+# Local thingies
+env.example
+plan.txt
+folder_structure.txt
+bigreadme.txt
