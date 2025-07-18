@@ -1,0 +1,79 @@
+version: '3.8'
+
+services:
+  app:
+    build: .
+    container_name: smart-solar-app
+    environment:
+      - PYTHONPATH=/app
+    volumes:
+      - .:/app
+    command: python tests/run_tests.py
+    depends_on:
+      - influxdb
+      - minio
+
+  test:
+    build: .
+    container_name: smart-solar-test
+    environment:
+      - PYTHONPATH=/app
+      - INFLUXDB_URL=http://influxdb:8086
+      - S3_ENDPOINT_URL=http://minio:9000
+    volumes:
+      - .:/app
+    depends_on:
+      - influxdb
+      - minio
+
+  influxdb:
+    image: influxdb:2.7
+    container_name: smart-solar-influxdb
+    environment:
+      - DOCKER_INFLUXDB_INIT_MODE=setup
+      - DOCKER_INFLUXDB_INIT_USERNAME=admin
+      - DOCKER_INFLUXDB_INIT_PASSWORD=password123
+      - DOCKER_INFLUXDB_INIT_ORG=solar_org
+      - DOCKER_INFLUXDB_INIT_BUCKET=solar_data
+      - DOCKER_INFLUXDB_INIT_ADMIN_TOKEN=your-super-secret-auth-token
+    ports:
+      - "8086:8086"
+    volumes:
+      - influxdb_data:/var/lib/influxdb2
+
+  minio:
+    image: minio/minio:latest
+    container_name: smart-solar-minio
+    environment:
+      - MINIO_ROOT_USER=minioadmin
+      - MINIO_ROOT_PASSWORD=minioadmin
+    command: server /data --console-address ":9001"
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    volumes:
+      - minio_data:/data
+
+  mock-inverter-api:
+    image: mockserver/mockserver:latest
+    container_name: smart-solar-mock-inverter
+    environment:
+      - MOCKSERVER_PROPERTY_FILE=/config/mockserver.properties
+    ports:
+      - "1080:1080"
+    volumes:
+      - ./tests/mocks:/config
+
+  mock-weather-api:
+    image: mockserver/mockserver:latest
+    container_name: smart-solar-mock-weather
+    environment:
+      - MOCKSERVER_PROPERTY_FILE=/config/mockserver.properties
+    ports:
+      - "1081:1080"
+    volumes:
+      - ./tests/mocks:/config
+
+volumes:
+  influxdb_data:
+  minio_data: 
