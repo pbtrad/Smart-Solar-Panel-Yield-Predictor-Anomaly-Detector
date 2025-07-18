@@ -142,7 +142,6 @@ Thumbs.db
 data/
 logs/
 *.log
-models/
 artifacts/
 temp/
 tmp/
