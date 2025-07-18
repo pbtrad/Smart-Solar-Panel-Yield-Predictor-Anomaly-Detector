@@ -1,0 +1,58 @@
+inverter:
+  enabled: false
+  api_url: ""
+  api_key: ""
+  inverter_ids: []
+
+weather:
+  enabled: false
+  api_url: ""
+  api_key: ""
+  location:
+    lat: 0.0
+    lon: 0.0
+
+maintenance:
+  enabled: false
+  file_path: ""
+
+storage:
+  timeseries:
+    url: "http://localhost:8086"
+    token: ""
+    org: ""
+    bucket: "solar_data"
+  object:
+    endpoint_url: "http://localhost:9000"
+    access_key: ""
+    secret_key: ""
+    bucket_name: "solar-data"
+
+models:
+  forecast:
+    algorithm: "prophet"
+    horizon_hours: 24
+    retrain_frequency_hours: 168
+  anomaly:
+    algorithm: "isolation_forest"
+    threshold: 0.95
+
+api:
+  host: "0.0.0.0"
+  port: 8000
+  debug: false
+
+notifications:
+  enabled: false
+  email:
+    smtp_server: ""
+    smtp_port: 587
+    username: ""
+    password: ""
+    from_email: ""
+    to_emails: []
+  sms:
+    twilio_account_sid: ""
+    twilio_auth_token: ""
+    twilio_phone_number: ""
+    to_phone_numbers: [] 
