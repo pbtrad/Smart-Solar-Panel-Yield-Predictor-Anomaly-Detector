@@ -105,7 +105,7 @@ class SolarAnomalyDetector:
 
         feature_df = df[feature_columns].copy()
 
-        feature_df = feature_df.fillna(method="ffill").fillna(method="bfill").fillna(0)
+        feature_df = feature_df.ffill().bfill().fillna(0)
 
         self.feature_columns = feature_columns
 
@@ -157,9 +157,7 @@ class SolarAnomalyDetector:
             df = self.create_features(df)
 
             feature_df = df[self.feature_columns].copy()
-            feature_df = (
-                feature_df.fillna(method="ffill").fillna(method="bfill").fillna(0)
-            )
+            feature_df = feature_df.ffill().bfill().fillna(0)
 
             scaled_features = self.scaler.transform(feature_df)
 
