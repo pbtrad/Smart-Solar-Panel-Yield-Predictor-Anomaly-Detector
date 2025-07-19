@@ -87,7 +87,7 @@ class ProphetFeatureEngineer:
             weather_df.sort_values("timestamp"),
             on="timestamp",
             direction="nearest",
-            tolerance=pd.Timedelta("1H"),
+            tolerance=pd.Timedelta("1h"),
         )
 
         return merged_df
@@ -207,9 +207,7 @@ class ProphetFeatureEngineer:
                 continue
 
             if df[col].isnull().sum() > 0:
-                df[col] = (
-                    df[col].fillna(method="ffill").fillna(method="bfill").fillna(0)
-                )
+                df[col] = df[col].ffill().bfill().fillna(0)
 
         return df
 
